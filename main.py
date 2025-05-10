@@ -27,7 +27,7 @@ def download():
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         ydl.download([url])
 
-    # Find real filename
+    # Find real downloaded filename
     real_file = None
     for f in os.listdir():
         if f.startswith(filename.split('%')[0]):
@@ -36,5 +36,8 @@ def download():
 
     return send_file(real_file, as_attachment=True)
 
+# ✅ Fix for Render deployment
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port, debug=True)
+
