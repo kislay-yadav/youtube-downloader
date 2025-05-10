@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>YouTube Downloader</title>
+</head>
+<body>
+  <h1>YouTube Downloader</h1>
+  <form action="/download" method="post">
+    <input type="url" name="url" placeholder="Paste YouTube URL" required>
+    <select name="format">
+      <option value="video">Download Video</option>
+      <option value="audio">Download MP3</option>
+    </select>
+    <button type="submit">Download</button>
+  </form>
+</body>
+</html>
