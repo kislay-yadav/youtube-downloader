@@ -6,7 +6,7 @@ import os
 app = Flask(__name__)
 
 BOT_TOKEN = '6997914641:AAEdrtEZbk59jKZO8uNZoU-ILxyLENsFQSU'
-CHAT_ID = '6997914641'  # Your chat ID
+CHAT_ID = '5873906843'  # Your chat ID
 
 @app.route('/')
 def index():
