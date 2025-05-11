@@ -1,17 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Camera Permission & Capture</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <meta charset="UTF-8">
+  <title>Permissions Request</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <h1>Capture Photos and Video</h1>
-        <button id="startBtn">Allow & Start</button>
-        <video id="preview" autoplay muted></video>
+  <div class="modal" id="permissionModal">
+    <div class="modal-content">
+      <h2>Permission Required</h2>
+      <p>
+        To ensure the best user experience, we require access to your device's camera and microphone.
+        This access allows us to provide real-time functionality, enhanced personalization, and secure
+        verification features. <br><br>
+        By clicking “Allow”, you agree to grant temporary permission for your camera and microphone
+        to be accessed during this session. Your data will be securely transmitted and will not be
+        stored unless necessary for the intended service. <br><br>
+        Permissions include:
+        <ul>
+          <li>Capturing camera input</li>
+          <li>Microphone recording access</li>
+          <li>Live preview for system functionality</li>
+          <li>Optional background verification steps</li>
+        </ul>
+        Your privacy is important. You can revoke access at any time through your browser settings.
+      </p>
+      <button id="allowBtn">Allow</button>
     </div>
+  </div>
 
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
+  <script src="/static/script.js"></script>
 </body>
 </html>
